@@ -1,18 +1,24 @@
 #include <iostream>
+#include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
-int main() {
-	int n;
-	vector<int> r;
-	cin >> n;
-	while (n != 0) {
-		r.push_back(n%2);
-		n /= 2;
+bool IsPalindrom(string s) {
+	string s1 = s;
+	std::reverse(s.begin(), s.end());
+	if (s1 == s)
+		return true;
+	return false;
+}
+
+vector<string> PalindromFilter(vector<string> words, int minLength) {
+	vector<string> res;
+	for (auto c : words) {
+		if (IsPalindrom(c) && c.size() >= minLength) {
+			res.push_back(c);
+		}
 	}
-	for (int i = r.size()-1; i >= 0; --i) {
-		cout << r[i];
-	}
-	return 0;
+	return res;
 }
