@@ -6,82 +6,85 @@
 
 using namespace std;
 
-void ChangeCapital(map<string, string>& cc, string country, string capital) {
-	if(cc.count(country) != 0) {
-		if(cc[country] != capital) {
-			cout << "Country " << country << " has changed its capital from "
-					<< cc[country] << " to " << capital;
-			cc[country] = capital;
-		} else {
-			cout << "Country " << country << " hasn't changed its capital";
-		}
-	} else {
-		cout << "Introduce new country " << country << " with capital " << capital;
-		cc[country] = capital;
-	}
-	cout << endl;
-}
-
-void Rename(map<string, string>& cc, string oldn, string newn) {
-	if(cc.count(oldn) != 0 && cc.count(newn) == 0 && oldn != newn) {
-		cout << "Country " << oldn << " with capital " << cc[oldn] << " has been renamed to " << newn;
-		cc[newn] = cc[oldn];
-		cc.erase(oldn);
-	} else {
-		cout << "Incorrect rename, skip";
-	}
-	cout << endl;
-}
-
-void About(map<string, string>& cc, string country) {
-	if(cc.count(country) != 0) {
-		cout << "Country " << country << " has capital " << cc[country];
-	} else {
-		cout << "Country " << country << " doesn't exist";
-	}
-	cout << endl;
-}
-
-void Dump(const map<string, string>& cc) {
-	if(cc.size() != 0) {
-		for(auto i : cc) {
-			cout << i.first << "/" << i.second << " ";
-		}
-		cout << endl;
-	} else {
-		cout << "There are no countries in the world";
-		cout << endl;
-	}
+bool has(const vector<string>& v, string el) {
+	if(std::find(v.begin(), v.end(), el) != v.end())
+		return true;
+	else
+		return false;
 }
 
 int main() {
-	int N;
+	int Q;
 	string command;
-	map<string, string> cc;
-	cin >> N;
-	for(int i = 0; i < N; i++) {
+	map<string, vector<string>> stops_for_bus;
+	cin >> Q;
+	for(int i = 0; i < Q; i++) {
 		cin >> command;
-		if (command == "CHANGE_CAPITAL")
-		{
-			string country, capital;
-			cin >> country >> capital;
-			ChangeCapital(cc, country, capital);
-		}
-		else if(command == "RENAME")
-		{
-			string oldn, newn;
-			cin >> oldn >> newn;
-			Rename(cc, oldn, newn);
-		}
-		else if(command == "ABOUT")
-		{
-			string country;
-			cin >> country;
-			About(cc, country);
-		}
-		else if(command == "DUMP")
-		{
-			Dump(cc);
+		if(command == "NEW_BUS") {
+			int n;
+			string stop;
+			string bus;
+			cin >> bus >> n;
+			vector<string> route;
+			for(int j = 0; j < n; j++) {
+				cin >> stop;
+				route.push_back(stop);
+			}
+			stops_for_bus[bus] = route;
+			route.clear();
+		} else if(command == "BUSES_FOR_STOP") {
+			string stop; cin >> stop;
+			vector<string> tmp_buses;
+			for(auto bus_and_route : stops_for_bus) {
+				if(has(bus_and_route.second, stop)) {	// Если автобус проезжает через остановку
+					tmp_buses.push_back(bus_and_route.first);
+				}
+			}
+			if(tmp_buses.size() == 0) {
+				cout << "No stop" << endl;
+				continue;
+			} else {
+				for(auto i : tmp_buses) {
+					cout << i << " ";
+				}
+				cout << endl;
+			}
+		} else if(command == "STOPS_FOR_BUS") {	// Написал после стакана вина. Не спрашивайте, как. Тееперь и работает
+			string bus; cin >> bus;
+			bool fl = true;
+			if(stops_for_bus.count(bus) == 0) {
+				cout << "No bus";
+				cout << endl;
+				continue;
+			}
+			for(auto stop : stops_for_bus[bus]) {
+				cout << "Stop " << stop << ": ";
+				for(auto route_and_bus : stops_for_bus) {
+					if(has(route_and_bus.second, stop) && route_and_bus.first != bus) {
+						cout << route_and_bus.first << " ";
+						fl = false;
+					}
+				}
+				if(fl) {
+					cout << "no interchange";
+				}
+				fl = true;
+				cout << endl;
+			}
+			fl = true;
+		} else if(command == "ALL_BUSES") {	// Тут все правильно.
+			if(stops_for_bus.size() == 0) {
+				cout << "No buses" << endl;
+				continue;
+			} else {
+				for(auto m : stops_for_bus) {
+					cout << "Bus " << m.first << ": ";
+					for(auto k : m.second) {
+						cout << k << " ";
+					}
+					cout << endl;
+				}
+			}
 		}
 	}
 	return 0;
