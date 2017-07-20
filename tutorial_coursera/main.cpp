@@ -3,10 +3,11 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <set>
 
 using namespace std;
 
-int has(const vector<vector<string>>& v, const vector<string>& el) {
+int has(const vector<set<string>>& v, const set<string>& el) {
 	for(unsigned i = 0; i < v.size(); i++) {
 		if(v[i] == el) {
 			return i;
@@ -18,14 +19,14 @@ int has(const vector<vector<string>>& v, const vector<string>& el) {
 int main() {
 	int Q;
 	cin >> Q;
-	vector<vector<string>> routes;
-	vector<string> curr;
+	vector<set<string>> routes;
+	set<string> curr;
 	string tmp;
 	for(int j = 0; j < Q; j++) {
 		int n; cin >> n;
 		for(int i = 0; i < n; i++ ) {
 			cin >> tmp;
-			curr.push_back(tmp);
+			curr.insert(tmp);
 		}
 		int t = has(routes, curr);
 		if(t == -1) {
