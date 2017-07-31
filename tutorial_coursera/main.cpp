@@ -7,6 +7,35 @@
 
 using namespace std;
 
-int main() {
-	return 0;
-}
+struct Specialization {
+  string name;
+  explicit Specialization(string s) {
+    name = s;
+  }
+};
+
+struct Course {
+  string name;
+  explicit Course(string c) {
+    name = c;
+  }
+};
+
+struct Week {
+  string name;
+  explicit Week(string w) {
+    name = w;
+  }
+};
+
+struct LectureTitle {
+  string specialization;
+  string course;
+  string week;
+
+  LectureTitle(Specialization s, Course c, Week w) {
+    specialization = s.name;
+    course = c.name;
+    week = w.name;
+  }
+};
